@@ -1,7 +1,6 @@
 package com.fhdufhdu.nocssboard.domain.user.controller
 
 import com.fhdufhdu.nocssboard.domain.user.controller.dto.UserRequestDto
-import com.fhdufhdu.nocssboard.domain.user.service.dto.UserServiceDto
 import com.fhdufhdu.nocssboard.domain.user.service.UserService
 import com.fhdufhdu.nocssboard.domain.user.service.dto.ExistUserId
 import jakarta.validation.Valid
