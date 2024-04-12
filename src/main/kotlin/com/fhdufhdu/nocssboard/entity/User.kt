@@ -12,11 +12,11 @@ class User(id: String, password: String) {
     @Id
     val id: String = id
 
-    @Column
+    @Column(nullable = false)
     var password: String = password
         protected set
 
-    @Column(name="created_at")
+    @Column(name="created_at", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     val createdAt: Timestamp = Timestamp(System.currentTimeMillis())
 

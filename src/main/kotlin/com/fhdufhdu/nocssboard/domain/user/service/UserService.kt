@@ -2,7 +2,7 @@ package com.fhdufhdu.nocssboard.domain.user.service
 
 import com.fhdufhdu.nocssboard.domain.user.service.dto.ExistUserId
 import com.fhdufhdu.nocssboard.entity.User
-import com.fhdufhdu.nocssboard.repository.UserRepository
+import com.fhdufhdu.nocssboard.repository.user.UserRepository
 import org.springframework.http.HttpStatus
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service

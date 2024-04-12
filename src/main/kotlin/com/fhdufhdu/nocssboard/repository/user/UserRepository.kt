@@ -1,4 +1,4 @@
-package com.fhdufhdu.nocssboard.repository
+package com.fhdufhdu.nocssboard.repository.user
 
 import com.fhdufhdu.nocssboard.entity.Post
 import com.fhdufhdu.nocssboard.entity.User

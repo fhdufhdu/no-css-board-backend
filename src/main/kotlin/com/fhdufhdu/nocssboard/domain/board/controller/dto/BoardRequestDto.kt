@@ -3,28 +3,29 @@ package com.fhdufhdu.nocssboard.domain.board.controller.dto
 import com.fhdufhdu.nocssboard.common.dto.CommonPaginationDto
 import com.fhdufhdu.nocssboard.common.dto.SortDirection
 import com.fhdufhdu.nocssboard.common.dto.ValidEnum
-import com.fhdufhdu.nocssboard.domain.board.service.dto.FindPostsEnum
+import com.fhdufhdu.nocssboard.domain.board.service.dto.BoardServiceDto
+import io.swagger.v3.oas.annotations.Hidden
 import jakarta.validation.constraints.NotBlank
 
 class BoardRequestDto {
 
-    class GetPosts(
-        @field:NotBlank
-        @field:ValidEnum(enumClass = FindPostsEnum.Input.SortCriteria::class, valuePropertyName = "value")
-        private val sort_criteria: String,
+    class FindPosts(
+            @field:NotBlank
+            @field:ValidEnum(enumClass = BoardServiceDto.FindPosts.Input.SortCriteria::class, valuePropertyName = "value")
+            private val sort_criteria: String,
 
-        @field:NotBlank
-        @field:ValidEnum(enumClass = SortDirection::class, valuePropertyName = "value")
-        private val sort_direction: String,
+            @field:NotBlank
+            @field:ValidEnum(enumClass = SortDirection::class, valuePropertyName = "value")
+            private val sort_direction: String,
 
-        private val search_query: String? = null,
+            private val search_query: String? = null,
 
-        @field:ValidEnum(enumClass = FindPostsEnum.Input.SearchCriteria::class, valuePropertyName = "value", isNull = true)
-        private val search_criteria: String? = null,
+            @field:ValidEnum(enumClass = BoardServiceDto.FindPosts.Input.SearchCriteria::class, valuePropertyName = "value", isNull = true)
+            private val search_criteria: String? = null,
 
-        page_number: Int,
-        page_size: Int,
-    ) : CommonPaginationDto(page_number, page_size) {
+            page_number: Int,
+            page_size: Int,
+    ) : CommonPaginationDto.Request(page_number, page_size) {
 
         val sortCriteria: String
             get() {
@@ -37,7 +38,7 @@ class BoardRequestDto {
             }
 
         val searchQuery: String?
-            get(){
+            get() {
                 return search_query
             }
 
@@ -46,5 +47,22 @@ class BoardRequestDto {
                 return search_criteria
             }
     }
+
+    class AddPost(
+            @field:NotBlank
+            val title: String,
+            @field:NotBlank
+            val content: String,
+    )
+
+    class FindComments(
+            page_number: Int,
+            page_size: Int
+    ): CommonPaginationDto.Request(page_number, page_size)
+
+    class AddComment(
+            @field:NotBlank
+            val content: String,
+    )
 
 }

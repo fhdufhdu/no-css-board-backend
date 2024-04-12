@@ -36,7 +36,6 @@ annotation class ValidEnum(
     val payload: Array<KClass<Payload>> = [],
     val ignoreCase: Boolean = false,
 ) {
-    @Component
     class EnumValidator(
     ) : ConstraintValidator<ValidEnum, String> {
         private val logger = LoggerFactory.getLogger(javaClass)

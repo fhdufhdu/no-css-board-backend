@@ -1,9 +1,12 @@
 package com.fhdufhdu.nocssboard
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fhdufhdu.nocssboard.auth.LoginFilter
 import com.fhdufhdu.nocssboard.auth.LoginService
-import com.fhdufhdu.nocssboard.repository.UserRepository
+import com.fhdufhdu.nocssboard.repository.user.UserRepository
 import com.querydsl.jpa.impl.JPAQueryFactory
+import io.swagger.v3.core.jackson.ModelResolver
 import jakarta.persistence.EntityManager
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
@@ -21,8 +24,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true, prePostEnabled = true)
 class SpringConfiguration(
-    private val userRepository: UserRepository,
-    private val entityManager: EntityManager
+        private val userRepository: UserRepository,
+        private val entityManager: EntityManager
 ) {
     @Bean
     @Throws(Exception::class)
@@ -68,6 +71,11 @@ class SpringConfiguration(
     @Bean
     fun queryFactory(): JPAQueryFactory {
         return JPAQueryFactory(entityManager)
+    }
+
+    @Bean
+    fun modelResolver(objectMapper: ObjectMapper): ModelResolver {
+        return ModelResolver(objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE))
     }
 
 }

@@ -2,7 +2,7 @@ package com.fhdufhdu.nocssboard.auth
 
 import com.fhdufhdu.nocssboard.domain.user.controller.dto.UserRequestDto
 import com.fhdufhdu.nocssboard.entity.User
-import com.fhdufhdu.nocssboard.repository.UserRepository
+import com.fhdufhdu.nocssboard.repository.user.UserRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.password.PasswordEncoder
 
