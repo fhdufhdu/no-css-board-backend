@@ -14,10 +14,14 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.config.annotation.web.invoke
 import org.springframework.security.crypto.factory.PasswordEncoderFactories
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.CorsConfigurationSource
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 @ComponentScan
 @Configuration
@@ -40,9 +44,10 @@ class SpringConfiguration(
             .csrf {
                 it.disable()
             }
+            .cors{}
             .addFilterBefore(
                 loginFilter()
-                    .setLoginPath("/user/log-in")
+                    .setLoginPath("/user/login")
                     .setMaxInactiveInterval(60 * 60 * 24 * 3),
                 UsernamePasswordAuthenticationFilter::class.java
             )
@@ -76,6 +81,19 @@ class SpringConfiguration(
     @Bean
     fun modelResolver(objectMapper: ObjectMapper): ModelResolver {
         return ModelResolver(objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE))
+    }
+
+    @Bean
+    fun corsConfigurationSource(): CorsConfigurationSource {
+        val configuration = CorsConfiguration()
+        configuration.allowedOrigins = listOf("http://localhost:3000", "http://127.0.0.1:3000")
+        configuration.allowedMethods = listOf("POST", "GET", "DELETE", "PUT")
+        configuration.allowedHeaders = listOf("*")
+        configuration.allowCredentials = true
+
+        val source = UrlBasedCorsConfigurationSource()
+        source.registerCorsConfiguration("/**", configuration)
+        return source
     }
 
 }

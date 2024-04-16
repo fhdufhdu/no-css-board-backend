@@ -24,10 +24,11 @@ class LoginFilter(
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
-        if (request.requestURI != loginPath) {
+        println(request.session.id)
+        if (request.method != HttpMethod.POST.name() || request.requestURI != loginPath) {
             filterChain.doFilter(request, response)
-        } else if (request.method != HttpMethod.POST.name()) {
-            failLogin(response, HttpStatus.METHOD_NOT_ALLOWED)
+//        } else if (request.method != HttpMethod.POST.name()) {
+//            failLogin(response, HttpStatus.METHOD_NOT_ALLOWED)
         } else {
             val newRequest = RequestWrapper(request)
             try {

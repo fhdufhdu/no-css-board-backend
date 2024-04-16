@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @PreAuthorize("isAuthenticated()")
-//@PreAuthorize("permitAll")
 @RequestMapping("board")
 @Validated
 @ResponseBody
 class BoardController(
         private val boardService: BoardService
 ) {
+    @PreAuthorize("permitAll")
     @GetMapping("posts")
     fun findPosts(@Valid @ModelAttribute query: BoardRequestDto.FindPosts): BoardServiceDto.FindPosts.Return {
         val page = BoardServiceDto.FindPosts.Input.Page(query.pageNumber, query.pageSize)
@@ -32,6 +32,7 @@ class BoardController(
         return boardService.findPosts(findPostsInput)
     }
 
+    @PreAuthorize("permitAll")
     @GetMapping("post/{postId}")
     fun findOnePost(@PathVariable postId: Long): BoardServiceDto.FindOnePost.Return {
         return boardService.findOnePost(postId)
@@ -48,6 +49,7 @@ class BoardController(
         boardService.deletePost(postId, userId)
     }
 
+    @PreAuthorize("permitAll")
     @GetMapping("post/{postId}/comments")
     fun findComments(@Valid @ModelAttribute query: BoardRequestDto.FindComments, @PathVariable postId: Long): BoardServiceDto.FindComments.Return {
         return boardService.findComments(postId, query.pageNumber, query.pageSize)

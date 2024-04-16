@@ -6,9 +6,18 @@ import com.querydsl.core.types.OrderSpecifier
 import com.querydsl.core.types.dsl.BooleanExpression
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
+import java.sql.Timestamp
 
 class PostRepositoryDto {
     class FindAllBySearch {
+        class Posts (
+            val id: Long,
+            val userId: String,
+            val title: String,
+            val content: String,
+            val createdAt: Timestamp,
+            val updatedAt: Timestamp?
+        )
         class SearchCondition(
                 val searchQuery: String,
                 val searchCriteria: String

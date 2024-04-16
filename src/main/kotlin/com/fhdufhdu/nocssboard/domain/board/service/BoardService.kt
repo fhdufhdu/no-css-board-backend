@@ -43,7 +43,7 @@ class BoardService(
         val page = postRepository.findAllBySearch(searchCondition, orderCondition, pageable)
 
         val postDtoList = page.content.stream().map {
-            BoardServiceDto.FindPosts.Return.Post(it.id!!, it.user.id, it.title, it.createdAt, it.updatedAt)
+            BoardServiceDto.FindPosts.Return.Post(it.id, it.userId, it.title, it.content, it.createdAt, it.updatedAt)
         }.toList()
 
         return BoardServiceDto.FindPosts.Return(postDtoList, page.number, page.totalPages)

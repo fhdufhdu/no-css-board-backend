@@ -62,6 +62,7 @@ class BoardServiceDto {
                     val id: Long,
                     val userId: String,
                     val title: String,
+                    val content: String,
                     val createdAt: Date,
                     val updatedAt: Date?
             )

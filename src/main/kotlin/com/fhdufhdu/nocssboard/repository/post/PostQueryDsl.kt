@@ -6,5 +6,9 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 
 interface PostQueryDsl {
-    fun findAllBySearch(search: PostRepositoryDto.FindAllBySearch.SearchCondition?, order: PostRepositoryDto.FindAllBySearch.OrderCondition, pageable: Pageable): Page<Post>
+    fun findAllBySearch(
+        search: PostRepositoryDto.FindAllBySearch.SearchCondition?,
+        order: PostRepositoryDto.FindAllBySearch.OrderCondition,
+        pageable: Pageable
+    ): Page<PostRepositoryDto.FindAllBySearch.Posts>
 }
