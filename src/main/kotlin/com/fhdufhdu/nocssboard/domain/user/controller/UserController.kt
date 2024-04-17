@@ -1,9 +1,12 @@
 package com.fhdufhdu.nocssboard.domain.user.controller
 
-import com.fhdufhdu.nocssboard.domain.user.controller.dto.UserRequestDto
+import com.fhdufhdu.nocssboard.domain.user.controller.dto.LogInRequest
+import com.fhdufhdu.nocssboard.domain.user.controller.dto.SignUpRequest
 import com.fhdufhdu.nocssboard.domain.user.service.UserService
-import com.fhdufhdu.nocssboard.domain.user.service.dto.ExistUserId
+import com.fhdufhdu.nocssboard.domain.user.service.dto.result.SessionUserDetail
+import com.fhdufhdu.nocssboard.domain.user.service.dto.result.UserDetail
 import jakarta.validation.Valid
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -11,19 +14,24 @@ import org.springframework.web.bind.annotation.*
 class UserController(
     private val userService: UserService
 ) {
+    @GetMapping
+    fun getSessionUserDetail(@AuthenticationPrincipal userId: String): SessionUserDetail {
+        return userService.fetchSessionUserDetail(userId)
+    }
+
     @PostMapping("signup")
-    fun signUp(@Valid @RequestBody signUp: UserRequestDto.SignUp) {
-        val id = signUp.id
-        val rawPassword = signUp.password
-        userService.addUser(id, rawPassword!!)
+    fun signUp(@Valid @RequestBody body: SignUpRequest) {
+        val id = body.id
+        val rawPassword = body.password
+        userService.registerUser(id, rawPassword!!)
     }
 
+    // swagger용 가짜 엔드포인트
     @PostMapping("login")
-    fun logIn(@RequestBody logIn: UserRequestDto.LogIn) {
-    }
+    fun logIn(@RequestBody body: LogInRequest) {}
 
-    @GetMapping("{id}/existence")
-    fun existUserId(@PathVariable("id") id: String): ExistUserId.Return  {
-        return userService.existUserId(id)
+    @GetMapping("{userId}")
+    fun getUserDetail(@PathVariable("userId") userId: String): UserDetail {
+        return userService.fetchUserDetail(userId)
     }
 }

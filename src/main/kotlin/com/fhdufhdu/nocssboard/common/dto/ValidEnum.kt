@@ -27,18 +27,15 @@ import kotlin.reflect.KClass
 )
 @Constraint(validatedBy = [EnumValidator::class])
 annotation class ValidEnum(
-    val enumClass: KClass<out Enum<*>>,
-    val valuePropertyName: String = "value",
-    val isUsePropertyName: Boolean = true,
+    val values: Array<String> = [],
     val isNull: Boolean = false,
-    val message: String = "Enum에 없는 값입니다.",
+    val message: String = "허용되지 않은 값입니다.",
     val groups: Array<KClass<Any>> = [],
     val payload: Array<KClass<Payload>> = [],
     val ignoreCase: Boolean = false,
 ) {
     class EnumValidator(
     ) : ConstraintValidator<ValidEnum, String> {
-        private val logger = LoggerFactory.getLogger(javaClass)
         private lateinit var annotation: ValidEnum
 
         override fun initialize(constraintAnnotation: ValidEnum) {
@@ -49,23 +46,8 @@ annotation class ValidEnum(
             if (value == null && annotation.isNull) {
                 return true
             }
-            val enumValues = annotation.enumClass.java.enumConstants
 
-            if (annotation.valuePropertyName.isBlank() || !annotation.isUsePropertyName){
-                return enumValues.any {
-                    it.name == value
-                }
-            }
-            try{
-                val field = annotation.enumClass.java.getDeclaredField(this.annotation.valuePropertyName)
-                field.isAccessible = true
-                return enumValues.any {
-                    field.get(it) == value
-                }
-            } catch (exception: NoSuchElementException){
-                return false
-            }
-
+            return annotation.values.any { it == value }
         }
     }
 }

@@ -1,8 +1,14 @@
 package com.fhdufhdu.nocssboard.domain.board.controller
 
-import com.fhdufhdu.nocssboard.domain.board.controller.dto.BoardRequestDto
+import com.fhdufhdu.nocssboard.domain.board.controller.dto.CommentAddtionRequest
+import com.fhdufhdu.nocssboard.domain.board.controller.dto.PostAdditionRequest
+import com.fhdufhdu.nocssboard.domain.board.controller.dto.PostCommentDetailsRequest
+import com.fhdufhdu.nocssboard.domain.board.controller.dto.PostSummariesRequest
 import com.fhdufhdu.nocssboard.domain.board.service.BoardService
-import com.fhdufhdu.nocssboard.domain.board.service.dto.BoardServiceDto
+import com.fhdufhdu.nocssboard.domain.board.service.dto.command.PostSummariesCommand
+import com.fhdufhdu.nocssboard.domain.board.service.dto.result.CommentDetails
+import com.fhdufhdu.nocssboard.domain.board.service.dto.result.PostDetail
+import com.fhdufhdu.nocssboard.domain.board.service.dto.result.PostSummaries
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.security.access.prepost.PreAuthorize
@@ -20,27 +26,27 @@ class BoardController(
 ) {
     @PreAuthorize("permitAll")
     @GetMapping("posts")
-    fun findPosts(@Valid @ModelAttribute query: BoardRequestDto.FindPosts): BoardServiceDto.FindPosts.Return {
-        val page = BoardServiceDto.FindPosts.Input.Page(query.pageNumber, query.pageSize)
-        val sort = BoardServiceDto.FindPosts.Input.Sort(query.sortCriteria, query.sortDirection)
-        var search: BoardServiceDto.FindPosts.Input.Search? = null
+    fun getPostSummaries(@Valid @ModelAttribute query: PostSummariesRequest): PostSummaries {
+        val page = PostSummariesCommand.Page(query.pageNumber, query.pageSize)
+        val sort = PostSummariesCommand.Sort(query.sortCriteria, query.sortDirection)
+        var search: PostSummariesCommand.Search? = null
         if (query.searchQuery != null && query.searchCriteria != null)
-            search = BoardServiceDto.FindPosts.Input.Search(query.searchQuery!!, query.searchCriteria!!)
+            search = PostSummariesCommand.Search(query.searchQuery!!, query.searchCriteria!!)
 
-        val findPostsInput = BoardServiceDto.FindPosts.Input(page, sort, search)
+        val findPostsInput = PostSummariesCommand(page, sort, search)
 
-        return boardService.findPosts(findPostsInput)
+        return boardService.filterPostSummaries(findPostsInput)
     }
 
     @PreAuthorize("permitAll")
     @GetMapping("post/{postId}")
-    fun findOnePost(@PathVariable postId: Long): BoardServiceDto.FindOnePost.Return {
-        return boardService.findOnePost(postId)
+    fun getPostDetail(@PathVariable postId: Long): PostDetail {
+        return boardService.fetchPostDetail(postId)
     }
 
     @PostMapping("post")
     @ResponseStatus(HttpStatus.CREATED)
-    fun addPost(@AuthenticationPrincipal userId: String, @Valid @RequestBody body: BoardRequestDto.AddPost) {
+    fun postPost(@AuthenticationPrincipal userId: String, @Valid @RequestBody body: PostAdditionRequest) {
         boardService.addPost(body.title, body.content, userId)
     }
 
@@ -51,18 +57,18 @@ class BoardController(
 
     @PreAuthorize("permitAll")
     @GetMapping("post/{postId}/comments")
-    fun findComments(@Valid @ModelAttribute query: BoardRequestDto.FindComments, @PathVariable postId: Long): BoardServiceDto.FindComments.Return {
-        return boardService.findComments(postId, query.pageNumber, query.pageSize)
+    fun getPostCommentDetails(@Valid @ModelAttribute query: PostCommentDetailsRequest, @PathVariable postId: Long): CommentDetails {
+        return boardService.fetchCommentDetails(postId, query.pageNumber, query.pageSize)
     }
 
     @PostMapping("post/{postId}/comment")
-    fun addComment(@Valid @RequestBody body: BoardRequestDto.AddComment, @PathVariable postId: Long, @AuthenticationPrincipal userId: String) {
+    fun postComment(@Valid @RequestBody body: CommentAddtionRequest, @PathVariable postId: Long, @AuthenticationPrincipal userId: String) {
         boardService.addComment(body.content, postId, userId)
     }
 
     @DeleteMapping("post/{postId}/comment/{commentId}")
     fun deleteComment(@PathVariable postId: Long, @PathVariable commentId: Long, @AuthenticationPrincipal userId: String) {
-        boardService.deleteComment(postId, commentId, userId)
+        boardService.removeComment(postId, commentId, userId)
     }
 
 }

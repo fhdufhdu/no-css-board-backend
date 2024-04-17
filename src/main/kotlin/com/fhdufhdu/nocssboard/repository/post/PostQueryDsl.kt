@@ -1,14 +1,10 @@
 package com.fhdufhdu.nocssboard.repository.post
 
-import com.fhdufhdu.nocssboard.entity.Post
-import com.fhdufhdu.nocssboard.repository.post.dto.PostRepositoryDto
+import com.fhdufhdu.nocssboard.repository.post.dto.condition.PostSummariesCondition
+import com.fhdufhdu.nocssboard.repository.post.dto.projection.PostSummariesProjection
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 
 interface PostQueryDsl {
-    fun findAllBySearch(
-        search: PostRepositoryDto.FindAllBySearch.SearchCondition?,
-        order: PostRepositoryDto.FindAllBySearch.OrderCondition,
-        pageable: Pageable
-    ): Page<PostRepositoryDto.FindAllBySearch.Posts>
+    fun findPostSummaries(condition: PostSummariesCondition, pageable: Pageable): Page<PostSummariesProjection>
 }

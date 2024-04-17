@@ -1,4 +1,4 @@
-package com.fhdufhdu.nocssboard.domain.board.service.dto
+package com.fhdufhdu.nocssboard.domain.board.service
 
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException

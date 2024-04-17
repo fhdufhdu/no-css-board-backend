@@ -1,7 +1,7 @@
 package com.fhdufhdu.nocssboard.auth
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fhdufhdu.nocssboard.domain.user.controller.dto.UserRequestDto
+import com.fhdufhdu.nocssboard.domain.user.controller.dto.LogInRequest
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -24,18 +24,17 @@ class LoginFilter(
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
-        println(request.session.id)
         if (request.method != HttpMethod.POST.name() || request.requestURI != loginPath) {
             filterChain.doFilter(request, response)
-//        } else if (request.method != HttpMethod.POST.name()) {
-//            failLogin(response, HttpStatus.METHOD_NOT_ALLOWED)
+        } else if (request.method != HttpMethod.POST.name()) {
+            failLogin(response, HttpStatus.METHOD_NOT_ALLOWED)
         } else {
             val newRequest = RequestWrapper(request)
             try {
                 val om = jacksonObjectMapper()
-                val loginInDto = om.readValue(newRequest.inputStream, UserRequestDto.LogIn::class.java)
+                val logInRequest = om.readValue(newRequest.inputStream, LogInRequest::class.java)
 
-                val user = loginService.findUser(loginInDto) ?: return failLogin(response, HttpStatus.FORBIDDEN)
+                val user = loginService.fetchUser(logInRequest.id, logInRequest.password) ?: return failLogin(response, HttpStatus.FORBIDDEN)
 
                 val auth = UserAuthentication(user)
 

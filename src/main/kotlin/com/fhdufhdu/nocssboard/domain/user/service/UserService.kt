@@ -1,8 +1,10 @@
 package com.fhdufhdu.nocssboard.domain.user.service
 
-import com.fhdufhdu.nocssboard.domain.user.service.dto.ExistUserId
+import com.fhdufhdu.nocssboard.domain.user.service.dto.result.SessionUserDetail
+import com.fhdufhdu.nocssboard.domain.user.service.dto.result.UserDetail
 import com.fhdufhdu.nocssboard.entity.User
 import com.fhdufhdu.nocssboard.repository.user.UserRepository
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
@@ -14,7 +16,12 @@ class UserService(
     private val userRepository: UserRepository
 ){
 
-    fun addUser(id: String, rawPassword: String) {
+    fun fetchSessionUserDetail(id: String): SessionUserDetail{
+        val user = userRepository.findByIdOrNull(id)?:throw UserServiceException.NotMatchSessionToUser()
+        return SessionUserDetail(user.id)
+    }
+
+    fun registerUser(id: String, rawPassword: String) {
         val encodedPassword = passwordEncoder.encode(rawPassword)
         val existUser = userRepository.existsById(id)
         if (existUser) {
@@ -24,8 +31,8 @@ class UserService(
         userRepository.save(newUser)
     }
 
-    fun existUserId(id: String): ExistUserId.Return {
-        val existUser = userRepository.existsById(id)
-        return ExistUserId.Return(existUser)
+    fun fetchUserDetail(id: String): UserDetail {
+        val user = userRepository.findByIdOrNull(id)?:throw UserServiceException.NotFoundUser()
+        return UserDetail(user.id)
     }
 }
