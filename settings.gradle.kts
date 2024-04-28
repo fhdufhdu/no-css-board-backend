@@ -1,1 +1,1 @@
-rootProject.name = "no-css-board"
+rootProject.name = "windows-7-board"
