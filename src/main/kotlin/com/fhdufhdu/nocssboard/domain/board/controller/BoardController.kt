@@ -9,6 +9,7 @@ import com.fhdufhdu.nocssboard.domain.board.service.dto.command.PostSummariesCom
 import com.fhdufhdu.nocssboard.domain.board.service.dto.result.CommentDetails
 import com.fhdufhdu.nocssboard.domain.board.service.dto.result.PostDetail
 import com.fhdufhdu.nocssboard.domain.board.service.dto.result.PostSummaries
+import com.fhdufhdu.nocssboard.domain.board.service.dto.result.SavedPost
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.security.access.prepost.PreAuthorize
@@ -46,8 +47,8 @@ class BoardController(
 
     @PostMapping("post")
     @ResponseStatus(HttpStatus.CREATED)
-    fun postPost(@AuthenticationPrincipal userId: String, @Valid @RequestBody body: PostAdditionRequest) {
-        boardService.addPost(body.title, body.content, userId)
+    fun postPost(@AuthenticationPrincipal userId: String, @Valid @RequestBody body: PostAdditionRequest): SavedPost{
+        return boardService.addPost(body.title, body.content, userId)
     }
 
     @DeleteMapping("post/{postId}")

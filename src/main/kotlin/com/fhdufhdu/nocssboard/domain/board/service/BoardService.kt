@@ -4,6 +4,7 @@ import com.fhdufhdu.nocssboard.domain.board.service.dto.command.PostSummariesCom
 import com.fhdufhdu.nocssboard.domain.board.service.dto.result.CommentDetails
 import com.fhdufhdu.nocssboard.domain.board.service.dto.result.PostDetail
 import com.fhdufhdu.nocssboard.domain.board.service.dto.result.PostSummaries
+import com.fhdufhdu.nocssboard.domain.board.service.dto.result.SavedPost
 import com.fhdufhdu.nocssboard.domain.user.service.UserServiceException
 import com.fhdufhdu.nocssboard.entity.Comment
 import com.fhdufhdu.nocssboard.entity.Post
@@ -52,11 +53,12 @@ class BoardService(
         )
     }
 
-    fun addPost(title: String, content: String, writerId: String) {
+    fun addPost(title: String, content: String, writerId: String): SavedPost {
         val writer = userRepository.findByIdOrNull(writerId)
             ?: throw UserServiceException.NotMatchSessionToUser()
         val newPost = Post(writer, title, content)
-        postRepository.save(newPost)
+        val savedPost = postRepository.save(newPost)
+        return SavedPost(savedPost.id!!)
     }
 
     fun deletePost(postId: Long, userId: String) {
@@ -73,7 +75,7 @@ class BoardService(
         val existPost = postRepository.existsByIdAndStatus(postId, Post.Status.PUBLISHED)
         if (!existPost) throw BoardServiceException.NotFoundPost()
 
-        val pageable = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, "createdAt"))
+        val pageable = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, "created_at"))
         val page = commentRepository.findAllByPostIdAndStatus(postId, Comment.Status.PUBLISHED, pageable)
 
         val commentDtoList = page.content.map {

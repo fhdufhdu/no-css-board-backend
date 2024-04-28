@@ -30,6 +30,11 @@ class UserController(
     @PostMapping("login")
     fun logIn(@RequestBody body: LogInRequest) {}
 
+    @GetMapping("my")
+    fun getMyUserDetail(@AuthenticationPrincipal id: String): UserDetail {
+        return userService.fetchUserDetail(id)
+    }
+
     @GetMapping("{userId}")
     fun getUserDetail(@PathVariable("userId") userId: String): UserDetail {
         return userService.fetchUserDetail(userId)
