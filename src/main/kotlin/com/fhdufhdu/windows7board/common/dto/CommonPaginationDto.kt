@@ -27,5 +27,6 @@ class CommonPaginationDto {
     abstract class Response(
             val number: Int,
             val totalPages: Int,
+            val totalElements: Long,
     )
 }

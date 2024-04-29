@@ -7,7 +7,8 @@ class CommentDetails (
     val comments: List<CommentDetail>,
     number: Int,
     totalPages: Int,
-): CommonPaginationDto.Response(number, totalPages){
+    totalElements: Long,
+): CommonPaginationDto.Response(number, totalPages, totalElements){
     class CommentDetail(
         val id: Long,
         val userId: String,

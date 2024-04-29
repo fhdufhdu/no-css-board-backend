@@ -1,5 +1,6 @@
 package com.fhdufhdu.windows7board.domain.board.service.dto.result
 
+import com.fhdufhdu.windows7board.common.dto.CommonPaginationDto
 import io.swagger.v3.oas.annotations.media.Schema
 import java.util.*
 
@@ -8,8 +9,9 @@ class PostSummaries(
     val posts: List<PostSummary>,
     number: Int,
     totalPages: Int,
-) {
-    class PostSummary (
+    totalElements: Long,
+) : CommonPaginationDto.Response(number, totalPages, totalElements) {
+    class PostSummary(
         val id: Long,
         val userId: String,
         val title: String,

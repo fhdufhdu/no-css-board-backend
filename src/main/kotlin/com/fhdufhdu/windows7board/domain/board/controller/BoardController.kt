@@ -63,6 +63,7 @@ class BoardController(
     }
 
     @PostMapping("post/{postId}/comment")
+    @ResponseStatus(HttpStatus.CREATED)
     fun postComment(@Valid @RequestBody body: CommentAddtionRequest, @PathVariable postId: Long, @AuthenticationPrincipal userId: String) {
         boardService.addComment(body.content, postId, userId)
     }

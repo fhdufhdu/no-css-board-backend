@@ -37,7 +37,7 @@ class BoardService(
             PostSummaries.PostSummary(it.id, it.userId, it.title, it.content, it.createdAt, it.updatedAt)
         }.toList()
 
-        return PostSummaries(postDtoList, page.number, page.totalPages)
+        return PostSummaries(postDtoList, page.number, page.totalPages, page.totalElements)
     }
 
     fun fetchPostDetail(postId: Long): PostDetail {
@@ -75,14 +75,14 @@ class BoardService(
         val existPost = postRepository.existsByIdAndStatus(postId, Post.Status.PUBLISHED)
         if (!existPost) throw BoardServiceException.NotFoundPost()
 
-        val pageable = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, "created_at"))
+        val pageable = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, "createdAt"))
         val page = commentRepository.findAllByPostIdAndStatus(postId, Comment.Status.PUBLISHED, pageable)
 
         val commentDtoList = page.content.map {
             CommentDetails.CommentDetail(it.id!!, it.user.id, it.content, it.createdAt, it.updatedAt)
         }
 
-        return CommentDetails(commentDtoList, page.number, page.totalPages)
+        return CommentDetails(commentDtoList, page.number, page.totalPages, page.totalElements)
     }
 
     fun addComment(content: String, postId: Long, writerId: String) {
