@@ -5,6 +5,6 @@ import com.fhdufhdu.windows7board.repository.post.dto.projection.PostSummariesPr
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 
-interface PostQueryDsl {
+interface PostSummariesQueryDsl {
     fun findPostSummaries(condition: PostSummariesCondition, pageable: Pageable): Page<PostSummariesProjection>
 }

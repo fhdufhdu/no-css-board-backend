@@ -24,14 +24,32 @@ class BoardService(
     private val userRepository: UserRepository
 ) {
     fun filterPostSummaries(input: PostSummariesCommand): PostSummaries {
-        val orderCondition = PostSummariesCondition.Order(input.sort.direction.queryDslOrder, input.sort.criteria.value)
-        val searchCondition = PostSummariesCondition.Search(input.search?.searchQuery, input.search?.searchCriteria?.value)
+        // 정렬 조건
+        val orderCriteria = when(input.sort.criteria) {
+            PostSummariesCommand.SortCriteria.TITLE -> PostSummariesCondition.OrderCriteria.TITLE
+            PostSummariesCommand.SortCriteria.CONTENT -> PostSummariesCondition.OrderCriteria.CONTENT
+            PostSummariesCommand.SortCriteria.CREATED_AT -> PostSummariesCondition.OrderCriteria.CREATED_AT
+            PostSummariesCommand.SortCriteria.USER_ID -> PostSummariesCondition.OrderCriteria.USER_ID
+        }
+        val orderCondition = PostSummariesCondition.Order(input.sort.direction.queryDslOrder, orderCriteria)
+
+        // 검색 조건
+        var searchCondition: PostSummariesCondition.Search? = null
+        if (input.search != null){
+            val searchCriteria = when(input.search.searchCriteria){
+                PostSummariesCommand.SearchCriteria.TITLE -> PostSummariesCondition.SearchCriteria.TITLE
+                PostSummariesCommand.SearchCriteria.CONTENT -> PostSummariesCondition.SearchCriteria.CONTENT
+                PostSummariesCommand.SearchCriteria.USER_ID -> PostSummariesCondition.SearchCriteria.USER_ID
+            }
+            searchCondition = PostSummariesCondition.Search(input.search.searchQuery, searchCriteria)
+        }
 
         // 페이지네이션 조건 객체
         val pageable = PageRequest.of(input.page.number, input.page.size)
 
         // 객체 조회
-        val page = postRepository.findPostSummaries(PostSummariesCondition(searchCondition, orderCondition), pageable)
+        val condition = PostSummariesCondition(searchCondition, orderCondition)
+        val page = postRepository.findPostSummaries(condition, pageable)
 
         val postDtoList = page.content.stream().map {
             PostSummaries.PostSummary(it.id, it.userId, it.title, it.content, it.createdAt, it.updatedAt)

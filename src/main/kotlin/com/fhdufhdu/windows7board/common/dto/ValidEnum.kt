@@ -24,7 +24,7 @@ import kotlin.reflect.KClass
 )
 @Constraint(validatedBy = [EnumValidator::class])
 annotation class ValidEnum(
-    val values: Array<String> = [],
+    val enum: KClass<out Enum<*>>,
     val isNull: Boolean = false,
     val message: String = "허용되지 않은 값입니다.",
     val groups: Array<KClass<Any>> = [],
@@ -40,11 +40,12 @@ annotation class ValidEnum(
         }
 
         override fun isValid(value: String?, context: ConstraintValidatorContext): Boolean {
+            val enums = annotation.enum.java.enumConstants
             if (value == null && annotation.isNull) {
                 return true
             }
 
-            return annotation.values.any { it == value }
+            return enums.any { it.name == value }
         }
     }
 }
