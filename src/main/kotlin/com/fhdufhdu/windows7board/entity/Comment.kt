@@ -1,5 +1,6 @@
 package com.fhdufhdu.windows7board.entity
 
+import com.fhdufhdu.windows7board.common.entity.CommonEnumConverter
 import jakarta.persistence.*
 import java.sql.Timestamp
 
@@ -18,7 +19,7 @@ class Comment(user: User, post: Post, content: String) {
     @JoinColumn(name="post_id", nullable = false)
     val post: Post = post
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     var content: String = content
         protected set
 
@@ -52,13 +53,6 @@ class Comment(user: User, post: Post, content: String) {
         PUBLISHED, DELETED;
 
         @jakarta.persistence.Converter(autoApply = true)
-        class Converter: AttributeConverter<Status, String> {
-            override fun convertToDatabaseColumn(status: Status): String = status.name
-
-            override fun convertToEntityAttribute(value: String): Status {
-                return entries.first { it.name == value }
-            }
-
-        }
+        class Converter: CommonEnumConverter<Post.Status>(Post.Status::class)
     }
 }
