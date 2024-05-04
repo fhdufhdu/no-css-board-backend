@@ -1,4 +1,3 @@
-![image](https://github.com/fhdufhdu/windows-7-board-backend/assets/32770312/a98d77a8-94f6-4161-8279-eb48f62b27fb)
 # init
 Windows7 컨셉 게시판의 백엔드 서버입니다. Spring boot 3으로 개발했습니다.
 
@@ -24,5 +23,8 @@ Windows7 컨셉 게시판의 백엔드 서버입니다. Spring boot 3으로 개�
 - JPA
 - QueryDSL
 
-# ER Diagram
+# er diagram
 ![image](https://github.com/fhdufhdu/windows-7-board-backend/assets/32770312/8afbb869-2453-4272-a871-8500b802a8d9)
+
+# screen shot
+![image](https://github.com/fhdufhdu/windows-7-board-backend/assets/32770312/c91148d8-ce1c-4964-92b1-ca7b449ecbdd)
