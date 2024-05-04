@@ -1,3 +1,4 @@
+![image](https://github.com/fhdufhdu/windows-7-board-backend/assets/32770312/a98d77a8-94f6-4161-8279-eb48f62b27fb)
 # init
 Windows7 컨셉 게시판의 백엔드 서버입니다. Spring boot 3으로 개발했습니다.
 
