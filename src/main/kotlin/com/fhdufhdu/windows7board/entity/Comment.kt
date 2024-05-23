@@ -53,6 +53,6 @@ class Comment(user: User, post: Post, content: String) {
         PUBLISHED, DELETED;
 
         @jakarta.persistence.Converter(autoApply = true)
-        class Converter: CommonEnumConverter<Post.Status>(Post.Status::class)
+        class Converter: CommonEnumConverter<Comment.Status>(Comment.Status::class)
     }
 }
